@@ -1,0 +1,9 @@
+---
+- name: "Execute Single task"
+  hosts: all
+  become: yes
+  tasks:
+    - name: Install the latest version of Git
+      yum:
+        name: git
+        state: latest
