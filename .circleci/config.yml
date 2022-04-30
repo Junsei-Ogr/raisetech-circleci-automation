@@ -17,7 +17,6 @@ jobs:
           aws-access-key-id: AWS_ACCESS_KEY
           aws-secret-access-key: AWS_SECRET_KEY
           aws-region: AWS_DEFAULT_REGION
-          configure-default-region: AWS_DEFAULT_REGION
       - run:
           name: "List Up s3 backets"
           command: "aws s3 ls"
