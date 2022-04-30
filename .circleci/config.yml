@@ -14,8 +14,13 @@ jobs:
     steps:
       - checkout # まずはgithubのリポジトリにまずはcheckout
       - aws-cli/setup:
-          profile-name: example
-      - run: echo "Run your code here"
+          aws-access-key-id: AWS_ACCESS_KEY
+          aws-secret-access-key: AWS_SECRET_KEY
+          aws-region: ap-northeast-1
+          configure-default-region: ap-northeast-1
+      - run:
+          name: "List Up s3 backets"
+          command: "aws s3 ls"
   say-hello:
     # Specify the execution environment. You can specify an image from Dockerhub or use one of our Convenience Images from CircleCI's Developer Hub.
     # See: https://circleci.com/docs/2.0/configuration-reference/#docker-machine-macos-windows-executor
