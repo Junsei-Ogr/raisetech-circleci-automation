@@ -19,7 +19,7 @@ jobs:
           aws-region: AWS_DEFAULT_REGION
       - run:
           name: "Upload Cloudformation files"
-          command: "aws cloudformation create-stack --stack-name sampleStack -region ap-northeast-1 --template-body file://sample_stack.yml"
+          command: "aws cloudformation create-stack --stack-name sampleStack --region ap-northeast-1 --template-body file://sample_stack.yml"
       - run:
           name: "Wait Stack Complete"
           command: "ws cloudformation wait stack-update-complete --stack-name sampleStack"
