@@ -22,7 +22,7 @@ jobs:
           command: "aws cloudformation create-stack --stack-name sampleStack --region ap-northeast-1 --template-body file://sample_stack.yml"
       - run:
           name: "Wait Stack Complete"
-          command: "aws cloudformation wait stack-update-complete --stack-name sampleStack"
+          command: "aws cloudformation wait stack-complete --stack-name sampleStack"
  
 
 # Invoke jobs via workflows
