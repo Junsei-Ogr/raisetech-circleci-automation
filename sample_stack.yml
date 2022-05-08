@@ -168,12 +168,12 @@ Resources:
 
 
   # ElasticIp定義
-  RaisetechLive10EIP:
-    Type: AWS::EC2::EIPAssociation
-    Properties:
-      EIP: 54.249.79.236
-      InstanceId: !Ref RaisetechLive10Ec21a
-    DependsOn: RaisetechLive10Ec21a
+  # RaisetechLive10EIP:
+  #   Type: AWS::EC2::EIPAssociation
+  #   Properties:
+  #     EIP: 54.249.79.236
+  #     InstanceId: !Ref RaisetechLive10Ec21a
+  #   DependsOn: RaisetechLive10Ec21a
 
   # EC2インスタンスの定義
   RaisetechLive10Ec21a:
