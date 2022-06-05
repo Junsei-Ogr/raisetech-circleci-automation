@@ -29,10 +29,12 @@ jobs:
         image: circleci/classic:edge
     steps:
       - checkout
-      - add_ssh_keys
-      - run:
-          name:"Connect ssh and echo Hello"
-          run: ssh ${USER_NAME}@${HOST_NAME} 'echo "Hello"'
+      - add_ssh_keys:
+          fingerprints:
+            
+        - run:
+            name:"Connect ssh and echo Hello"
+            run: ssh ${USER_NAME}@${HOST_NAME} 'echo "Hello"'
 
 
 # Invoke jobs via workflows
