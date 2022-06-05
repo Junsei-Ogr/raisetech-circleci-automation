@@ -25,6 +25,8 @@ jobs:
           command: "aws cloudformation wait stack-create-complete --stack-name SampleStack"
  
   ansible:
+    machine:
+        image: circleci/classic:edge
     steps:
       - checkout
       - add_ssh_keys
