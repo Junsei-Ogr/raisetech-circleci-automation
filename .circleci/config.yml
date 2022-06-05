@@ -30,11 +30,11 @@ jobs:
     steps:
       - checkout
       - add_ssh_keys:
-          fingerprints:
-            
-        - run:
-            name:"Connect ssh and echo Hello"
-            run: ssh ${USER_NAME}@${HOST_NAME} 'echo "Hello"'
+        fingerprints:
+          - "ac:66:0a:e2:ce:28:9e:b7:21:18:ea:a2:36:a4:4e:66"    
+      - run:
+          name:"Connect ssh and echo Hello"
+          run: ssh ${USER_NAME}@${HOST_NAME} 'echo "Hello"'
 
 
 # Invoke jobs via workflows
