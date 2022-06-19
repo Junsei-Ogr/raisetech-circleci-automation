@@ -27,21 +27,21 @@ jobs:
  
   ansible:
 　　executor: python-version/default
-    steps:
-      - checkout
-      - add_ssh_keys:
-          fingerprints:
-            - "ac:66:0a:e2:ce:28:9e:b7:21:18:ea:a2:36:a4:4e:66"
-      - ansible-playbook/install:
-          version: "2.9.23"
-      - ansible-playbook/playbook:
-          invetory: ANSIBLE_INVENTORY
-          playbook: playbook.yml
-          playbook-options: "-u ec2-user --private-key ~/.ssh/id_rsa"
-          # private-key: ANSIBLE_PRIVATE_KEY
-      # - run:
-      #     name: "Connect ssh and echo Hello"
-      #     command: ssh ${USER_NAME}@${HOST_NAME} 'echo Hello'
+      steps:
+        - checkout
+        - add_ssh_keys:
+            fingerprints:
+              - "ac:66:0a:e2:ce:28:9e:b7:21:18:ea:a2:36:a4:4e:66"
+        - ansible-playbook/install:
+            version: "2.9.23"
+        - ansible-playbook/playbook:
+            invetory: ANSIBLE_INVENTORY
+            playbook: playbook.yml
+            playbook-options: "-u ec2-user --private-key ~/.ssh/id_rsa"
+            # private-key: ANSIBLE_PRIVATE_KEY
+        # - run:
+        #     name: "Connect ssh and echo Hello"
+        #     command: ssh ${USER_NAME}@${HOST_NAME} 'echo Hello'
 
 
 # Invoke jobs via workflows
