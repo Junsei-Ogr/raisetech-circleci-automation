@@ -5,6 +5,8 @@ version: 2.1
 
 orbs:
   aws-cli: circleci/aws-cli@2.0
+# orbs: 
+#   aws-cli: circleci/aws-cli@3.1.1
 
 # Define a job to be invoked later in a workflow.
 # See: https://circleci.com/docs/2.0/configuration-reference/#jobs
@@ -30,8 +32,8 @@ jobs:
     steps:
       - checkout
       - add_ssh_keys:
-        fingerprints:
-          - "ac:66:0a:e2:ce:28:9e:b7:21:18:ea:a2:36:a4:4e:66"    
+          fingerprints:
+            - "ac:66:0a:e2:ce:28:9e:b7:21:18:ea:a2:36:a4:4e:66"    
       - run:
           name: "Connect ssh and echo Hello"
           command: ssh ${USER_NAME}@${HOST_NAME} 'echo Hello'
