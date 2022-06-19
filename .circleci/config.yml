@@ -28,7 +28,8 @@ jobs:
  
   ansible:
     machine:
-        image: circleci/classic:edge
+        # image: circleci/classic:edge
+        image: true
     steps:
       - checkout
       - add_ssh_keys:
