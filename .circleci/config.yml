@@ -2,7 +2,6 @@
 # See: https://circleci.com/docs/2.0/configuration-reference
 version: 2.1
 
-
 orbs:
   aws-cli: circleci/aws-cli@2.0
   ansible-playbook: orbss/ansible-playbook@0.0.5
@@ -11,38 +10,33 @@ orbs:
 # See: https://circleci.com/docs/2.0/configuration-reference/#jobs
 jobs:
   aws-cli-example:
-    executor: aws-cli/default # 実行元の呼び出し
+    executor: aws-cli/default
     steps:
-      - checkout # まずはgithubのリポジトリにまずはcheckout
+      - checkout
       - aws-cli/setup:
           aws-access-key-id: AWS_ACCESS_KEY
           aws-secret-access-key: AWS_SECRET_KEY
           aws-region: AWS_DEFAULT_REGION
       - run:
           name: "Upload Cloudformation files"
-          command: "aws cloudformation create-stack --stack-name SampleStack --region ap-northeast-1 --template-body file://sample_stack.yml"
+          command: "aws cloudformation create-stack --stack-name sampleStack --region ap-northeast-1 --template-body file://sample_stack.yml"
       - run:
           name: "Wait Stack Complete"
-          command: "aws cloudformation wait stack-create-complete --stack-name SampleStack"
- 
-  ansible:
-　　executor: python-version/default
-      steps:
-        - checkout
-        - add_ssh_keys:
-            fingerprints:
-              - "ac:66:0a:e2:ce:28:9e:b7:21:18:ea:a2:36:a4:4e:66"
-        - ansible-playbook/install:
-            version: "2.9.23"
-        - ansible-playbook/playbook:
-            invetory: ANSIBLE_INVENTORY
-            playbook: playbook.yml
-            playbook-options: "-u ec2-user --private-key ~/.ssh/id_rsa"
-            # private-key: ANSIBLE_PRIVATE_KEY
-        # - run:
-        #     name: "Connect ssh and echo Hello"
-        #     command: ssh ${USER_NAME}@${HOST_NAME} 'echo Hello'
+          command: "aws cloudformation wait stack-create-complete --stack-name sampleStack"
 
+  ansible:
+    executor: ansible-playbook/default
+    steps:
+      - checkout
+      - add_ssh_keys:  
+          fingerprints:  
+            - "da:69:d5:98:13:b6:b2:f6:cc:e6:e5:f3:77:6d:85:75"  
+      - ansible-playbook/install:
+          version: "2.9.23"
+      - ansible-playbook/playbook:
+          inventory: ANSIBLE_INVENTORY
+          playbook: playbook.yml
+          playbook-options: "-u ec2-user --private-key ~/.ssh/id_rsa"
 
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
@@ -53,4 +47,3 @@ workflows:
   ansible:
     jobs:
       - ansible
-
