@@ -26,8 +26,8 @@ jobs:
           command: "aws cloudformation wait stack-create-complete --stack-name SampleStack"
  
   ansible:
-　　executor: python-version/default
-    # steps:
+    executor: ansible-playbook/default
+    steps:
       - checkout
       - add_ssh_keys:
           fingerprints:
@@ -35,7 +35,7 @@ jobs:
       - ansible-playbook/install:
           version: "2.9.23"
       - ansible-playbook/playbook:
-          invetory: ANSIBLE_INVENTORY
+          inventory: ANSIBLE_INVENTORY
           playbook: playbook.yml
           playbook-options: "-u ec2-user --private-key ~/.ssh/id_rsa"
           # private-key: ANSIBLE_PRIVATE_KEY
