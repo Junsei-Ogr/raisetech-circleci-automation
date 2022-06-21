@@ -27,7 +27,7 @@ jobs:
  
   ansible:
 　　executor: python-version/default
-    steps:
+    # steps:
       - checkout
       - add_ssh_keys:
           fingerprints:
