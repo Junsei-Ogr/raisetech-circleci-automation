@@ -32,7 +32,6 @@ jobs:
       - add_ssh_keys:
           fingerprints:
             - "ac:66:0a:e2:ce:28:9e:b7:21:18:ea:a2:36:a4:4e:66"
-      - run: ssh -o StrictHostKeyChecking=no
       - ansible-playbook/install:
           version: "2.9.23"
       - ansible-playbook/playbook:
