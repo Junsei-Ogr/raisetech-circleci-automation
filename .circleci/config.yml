@@ -5,6 +5,7 @@ version: 2.1
 
 orbs:
   aws-cli: circleci/aws-cli@2.0
+  ansible-playbook: orbss/ansible-playbook@0.0.5
 
 # Define a job to be invoked later in a workflow.
 # See: https://circleci.com/docs/2.0/configuration-reference/#jobs
@@ -24,6 +25,24 @@ jobs:
           name: "Wait Stack Complete"
           command: "aws cloudformation wait stack-create-complete --stack-name SampleStack"
  
+  ansible:
+    executor: ansible-playbook/default
+    steps:
+      - checkout
+      - add_ssh_keys:
+          fingerprints:
+            - "ac:66:0a:e2:ce:28:9e:b7:21:18:ea:a2:36:a4:4e:66"
+      - ansible-playbook/install:
+          version: "2.9.23"
+      - ansible-playbook/playbook:
+          inventory: ANSIBLE_INVENTORY
+          playbook: playbook.yml
+          playbook-options: "-u ec2-user --private-key ~/.ssh/id_rsa"
+          # private-key: ANSIBLE_PRIVATE_KEY
+      # - run:
+      #     name: "Connect ssh and echo Hello"
+      #     command: ssh ${USER_NAME}@${HOST_NAME} 'echo Hello'
+
 
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
@@ -31,4 +50,7 @@ workflows:
   # aws-cli:
   #   jobs:
   #     - aws-cli-example
+  ansible:
+    jobs:
+      - ansible
 
