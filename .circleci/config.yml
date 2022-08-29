@@ -78,7 +78,7 @@ jobs:
 #       - ansible
 
 workflows:
-  raisetech-circleci-live-demo:
+  ansible:
     jobs:
       - execute-cloudformation
       - execute-ansible:
