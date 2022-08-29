@@ -76,4 +76,8 @@ workflows:
   ansible:
     jobs:
       - ansible
+  execute-serverspec:
+    jobs:
+      - execute-serverspec
+
 
