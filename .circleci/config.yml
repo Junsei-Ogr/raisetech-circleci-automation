@@ -11,7 +11,7 @@ orbs:
 # Define a job to be invoked later in a workflow.
 # See: https://circleci.com/docs/2.0/configuration-reference/#jobs
 jobs:
-  aws-cli-example:
+  execute-cloudformation:
     executor: aws-cli/default # 実行元の呼び出し
     steps:
       - checkout # まずはgithubのリポジトリにまずはcheckout
@@ -69,15 +69,22 @@ jobs:
             bundle exec rspec
 
 
+# workflows:
+#   # aws-cli:
+#   #   jobs:
+#   #     - aws-cli-example
+#   ansible:
+#     jobs:
+#       - ansible
 workflows:
-  # aws-cli:
-  #   jobs:
-  #     - aws-cli-example
   ansible:
     jobs:
-      - ansible
-  execute-serverspec:
-    jobs:
-      - execute-serverspec
+      - execute-cloudformation
+      - ansible:
+          requires:
+            - "ansible"
+      - execute-serverspec:
+          requires:
+            - execute-ansible
 
 
