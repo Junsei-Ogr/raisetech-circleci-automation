@@ -69,21 +69,11 @@ jobs:
             bundle exec rspec
 
 
-# workflows:
-#   # aws-cli:
-#   #   jobs:
-#   #     - aws-cli-example
-#   ansible:
-#     jobs:
-#       - ansible
-
 workflows:
+  # aws-cli:
+  #   jobs:
+  #     - aws-cli-example
   ansible:
     jobs:
-      - execute-cloudformation
-      - execute-ansible:
-          requires:
-            - "execute-cloudformation"
-      - execute-serverspec:
-          requires:
-            - execute-ansible
+      - ansible
+
