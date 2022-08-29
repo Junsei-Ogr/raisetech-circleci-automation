@@ -5,7 +5,8 @@ version: 2.1
 
 orbs:
   aws-cli: circleci/aws-cli@2.0
-  ansible-playbook: orbss/ansible-playbook@0.0.5
+  ansible-playbook: orbss/ansible-playbook@0.0.5  
+  ruby: circleci/ruby@1.8.0
 
 # Define a job to be invoked later in a workflow.
 # See: https://circleci.com/docs/2.0/configuration-reference/#jobs
@@ -38,19 +39,51 @@ jobs:
           inventory: ANSIBLE_INVENTORY
           playbook: playbook.yml
           playbook-options: "-u ec2-user --private-key ~/.ssh/id_rsa"
-          # private-key: ANSIBLE_PRIVATE_KEY
-      # - run:
-      #     name: "Connect ssh and echo Hello"
-      #     command: ssh ${USER_NAME}@${HOST_NAME} 'echo Hello'
+  execute-serverspec:
+    docker:
+      - image: 'cimg/ruby:2.7-node'
+    environment:
+      BUNDLE_JOBS: '3'
+      BUNDLE_RETRY: '3'
+    steps:
+      - checkout
+      - ruby/install-deps:
+          apps/install-deps:
+          app-dir:  'serverspec'
+      - run:
+          name: set env
+          command: |
+            echo "export TARGET_HOST=${TARGET_HOST}" >> $BASH_ENV
+            echo "export TARGET_USER=${TARGET_USER}" >> $BASH_ENV
+      - run:
+          name: upload env.text
+          command: |
+            echo 'target_host: '${TARGET_HOST} >> env.txt
+            echo 'target_user: '${TARGET_USER} >> env.txt
+      - store_artifacts:
+          path: env.txt
+      - run:
+          name: execute-serverspec
+          command: |
+            cd serverspec
+            bundle exec rspec
 
 
-# Invoke jobs via workflows
-# See: https://circleci.com/docs/2.0/configuration-reference/#workflows
+# workflows:
+#   # aws-cli:
+#   #   jobs:
+#   #     - aws-cli-example
+#   ansible:
+#     jobs:
+#       - ansible
+
 workflows:
-  # aws-cli:
-  #   jobs:
-  #     - aws-cli-example
-  ansible:
+  raisetech-circleci-live-demo:
     jobs:
-      - ansible
-
+      - execute-cloudformation
+      - execute-ansible:
+          requires:
+            - "execute-cloudformation"
+      - execute-serverspec:
+          requires:
+            - execute-ansible
