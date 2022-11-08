@@ -6,6 +6,7 @@ version: 2.1
 orbs:
   aws-cli: circleci/aws-cli@2.0
   ansible-playbook: orbss/ansible-playbook@0.0.5
+  ruby: circleci/ruby@1.0 
 
 # Define a job to be invoked later in a workflow.
 # See: https://circleci.com/docs/2.0/configuration-reference/#jobs
@@ -38,12 +39,16 @@ jobs:
           inventory: ANSIBLE_INVENTORY
           playbook: playbook.yml
           playbook-options: "-u ec2-user --private-key ~/.ssh/id_rsa"
-          # private-key: ANSIBLE_PRIVATE_KEY
-      # - run:
-      #     name: "Connect ssh and echo Hello"
-      #     command: ssh ${USER_NAME}@${HOST_NAME} 'echo Hello'
-
-
+  build:
+    docker:
+      - image: 'cimg/base:stable'
+    steps:
+      - checkout
+      - ruby/install:
+          version: '2.7'
+      - run: echo "Ruby 2.7 has been installed"
+   
+   
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
 workflows:
@@ -53,4 +58,7 @@ workflows:
   ansible:
     jobs:
       - ansible
-
+  ruby:
+    jobs:
+      - ruby
+  
