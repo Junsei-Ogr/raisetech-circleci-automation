@@ -58,4 +58,7 @@ workflows:
   ansible:
     jobs:
       - ansible
+  build:
+    jobs:
+      - build Ruby 2.7 has been installed
 
