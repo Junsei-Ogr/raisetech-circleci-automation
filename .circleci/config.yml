@@ -39,9 +39,12 @@ jobs:
           inventory: ANSIBLE_INVENTORY
           playbook: playbook.yml
           playbook-options: "-u ec2-user --private-key ~/.ssh/id_rsa"
-  build:
+  addserverspec:
     docker:
       - image: cimg/ruby:2.7-node
+    environment:
+      BUNDLE_JOBS: '3'
+      BUNDLE_RETRY: '3'
     steps:
       - checkout
       - ruby/install-deps:
@@ -58,5 +61,5 @@ workflows:
   ansible:
     jobs:
       - ansible
-      - build
+      - addserverspec
       
