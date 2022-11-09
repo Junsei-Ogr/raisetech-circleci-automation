@@ -41,10 +41,10 @@ jobs:
           playbook-options: "-u ec2-user --private-key ~/.ssh/id_rsa"
   build:
     docker:
-      - image: 'cimg/base:stable'
+      - image: cimg/ruby:2.7-node
     steps:
       - checkout
-      - ruby/install:
+      - ruby/install-deps
           version: '2.7'
       - run: echo "Ruby 2.7 has been installed"
    
@@ -58,7 +58,5 @@ workflows:
   ansible:
     jobs:
       - ansible
-  build:
-    jobs:
-      - build Ruby 2.7 has been installed
-
+      - build
+      
