@@ -57,5 +57,7 @@ workflows:
   #   jobs:
     jobs:
       - ansible
-      - install-ruby
+      - install-ruby:
+          requires:
+            - "ansible"
       
