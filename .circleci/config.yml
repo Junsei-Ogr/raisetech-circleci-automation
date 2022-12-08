@@ -55,7 +55,6 @@ jobs:
 workflows:
   raisetech-circleci:
     jobs:
-      - aws-cli-example
       - ansible
       # - install-ruby:
       #     requires:
