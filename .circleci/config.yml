@@ -56,7 +56,7 @@ workflows:
   raisetech-circleci:
     jobs:
       - ansible
-      # - install-ruby:
-      #     requires:
-      #       - "ansible"
+      - install-ruby:
+          requires:
+            - "ansible"
       
