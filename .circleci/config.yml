@@ -42,12 +42,32 @@ jobs:
   install-ruby:  
     docker:
       - image: cimg/ruby:2.7-node
+    # steps:
+    #   - checkout
+    #   - ruby/install-deps:
+    #       version'2.7'
+    #   - run echo "Ruby 2.7 has been installed"
     steps:
       - checkout
       - ruby/install-deps:
-          version'2.7'
-      - run echo "Ruby 2.7 has been installed"
-
+          app-dir: 'serverspec'
+      - run:
+          name: set env
+          command: |
+            echo "export TARGET_HOST=${TARGET_HOST}" >> $BASH_ENV
+            echo "export TARGET_USER=${TARGET_USER}" >> $BASH_ENV
+      - run:
+          name: upload env.text
+          command: |
+            echo 'target_host: '${TARGET_HOST} >> env.txt
+            echo 'target_user: '${TARGET_USER} >> env.txt
+      - store_artifacts:
+          path: env.txt
+      - run:
+          name: execute-serverspec
+          command: |
+            cd serverspec
+            bundle exec rspec
    
    
 # Invoke jobs via workflows
@@ -55,7 +75,6 @@ jobs:
 workflows:
   raisetech-circleci:
     jobs:
-      - aws-cli-example
       - ansible
       - install-ruby:
           requires:
