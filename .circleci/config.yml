@@ -44,7 +44,7 @@ jobs:
       - image: cimg/ruby:2.7-node
     steps:
       - checkout
-      - ruby/install:
+      - ruby/install-deps:
           version'2.7'
       - run echo "Ruby 2.7 has been installed"
 
