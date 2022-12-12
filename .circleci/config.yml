@@ -45,8 +45,8 @@ jobs:
     steps:
       - checkout
       - ruby/install:
-          version'2.7'
-      - run echo "Ruby 2.7 has been installed"
+          version: '2.7'
+      # - run echo "Ruby 2.7 has been installed"
 
    
    
@@ -55,7 +55,10 @@ jobs:
 workflows:
   raisetech-circleci:
     jobs:
-      - ansible
+      - aws-cli-example
+      - ansible:
+          requires:
+            - "aws-cli-example"
       - install-ruby:
           requires:
             - "ansible"
