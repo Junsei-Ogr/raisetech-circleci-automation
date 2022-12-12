@@ -55,7 +55,7 @@ jobs:
 workflows:
   raisetech-circleci:
     jobs:
-      - aws-cli-example
+      # - aws-cli-example
       - ansible:
           requires:
             - "aws-cli-example"
