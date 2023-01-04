@@ -44,9 +44,15 @@ jobs:
       - image: cimg/ruby:2.7-node
     steps:
       - checkout
-      - ruby/install:
-          version: '2.7'
-      # - run echo "Ruby 2.7 has been installed"
+      # - ruby/install:
+      #     version: '2.7'
+      - ruby/install-deps:
+          app-dir: serverSpec
+      - run:
+          name: executeServerSpec
+          command: |
+            cd serverSpec
+            bundle exec rspec
 
    
    
@@ -59,4 +65,5 @@ workflows:
       - install-ruby:
           requires:
             - "ansible"
+            
       
