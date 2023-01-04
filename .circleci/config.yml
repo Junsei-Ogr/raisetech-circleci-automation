@@ -44,8 +44,8 @@ jobs:
       - image: cimg/ruby:2.7-node
     steps:
       - checkout
-      # - ruby/install:
-      #     version: '2.7'
+      - ruby/install:
+          version: '2.7'
       - ruby/install-deps:
           app-dir: serverSpec
       - run:
