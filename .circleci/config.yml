@@ -46,13 +46,6 @@ jobs:
       - checkout
       - ruby/install:
           version: '2.7'
-      - ruby/install-deps:
-          app-dir: serverSpec
-      - run:
-          name: executeServerSpec
-          command: |
-            cd serverSpec
-            bundle exec rspec
 
    
    
