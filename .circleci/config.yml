@@ -46,6 +46,16 @@ jobs:
       - checkout
       - ruby/install:
           version: '2.7'
+  install-Serverspec:
+    docker:
+      - image: cimg/ruby:2.7-node
+    steps:
+    - checkout
+    - run:
+        name: Install Serverspec
+        command: gem install serverspec
+
+      
 
    
    
@@ -58,5 +68,7 @@ workflows:
       - install-ruby:
           requires:
             - "ansible"
-            
       
+      - install-Serverspec:
+          requires:
+            - "serverspec"
