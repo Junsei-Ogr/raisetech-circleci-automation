@@ -69,6 +69,4 @@ workflows:
           requires:
             - "ansible"
       
-      - install-Serverspec:
-          requires:
-            - "serverspec"
+      - install-Serverspec
