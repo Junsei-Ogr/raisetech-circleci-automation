@@ -54,9 +54,9 @@ jobs:
     - run: # Serverspecをインストールします
         name: Install Serverspec
         command: gem install serverspec
-    # - run: # Serverspecのテストを実行します
-    #     name: Run Serverspec
-    #     command: rake spec
+    - run: # Serverspecのテストを実行します
+        name: Run Serverspec
+        command: rake spec
       
 
    
