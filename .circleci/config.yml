@@ -18,21 +18,25 @@ jobs:
           aws-access-key-id: AWS_ACCESS_KEY
           aws-secret-access-key: AWS_SECRET_KEY
           aws-region: AWS_DEFAULT_REGION
-      - run:
-          name: "Check Stack Existence"
-          command: |
-            STACK_NAME="SampleStack"
-            REGION="ap-northeast-1"
+      # - run:
+      #     name: "Check Stack Existence"
+      #     command: |
+      #       STACK_NAME="SampleStack"
+      #       REGION="ap-northeast-1"
             
-            # Check if the stack exists
-            if aws cloudformation describe-stacks --stack-name $STACK_NAME --region $REGION >/dev/null 2>&1; then
-              echo "Stack $STACK_NAME already exists. Skipping stack creation."
-              exit 0
-            else
-              echo "Stack $STACK_NAME does not exist. Proceeding with stack creation."
-              # Execute the stack creation command here
-              aws cloudformation create-stack --stack-name $STACK_NAME --region $REGION --template-body file://sample_stack.yml
-            fi
+      #       # Check if the stack exists
+      #       if aws cloudformation describe-stacks --stack-name $STACK_NAME --region $REGION >/dev/null 2>&1; then
+      #         echo "Stack $STACK_NAME already exists. Skipping stack creation."
+      #         exit 0
+      #       else
+      #         echo "Stack $STACK_NAME does not exist. Proceeding with stack creation."
+      #         # Execute the stack creation command here
+      #         aws cloudformation create-stack --stack-name $STACK_NAME --region $REGION --template-body file://sample_stack.yml
+      #       fi
+      - run:
+          echo "Deploying to Cloudformation..."
+      - run: 
+          aws cloudformation deploy --template-file ./cloudformation.yml --stack-name SampleStack
       - run:
           name: "Wait Stack Complete"
           command: "aws cloudformation wait stack-create-complete --stack-name SampleStack"
