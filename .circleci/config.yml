@@ -34,9 +34,10 @@ jobs:
       #         aws cloudformation create-stack --stack-name $STACK_NAME --region $REGION --template-body file://sample_stack.yml
       #       fi
       - run:
-          echo "Deploying to Cloudformation..."
-      - run: 
-          aws cloudformation deploy --template-file ./cloudformation.yml --stack-name SampleStack
+          name: deploy Cloudformation
+          command: |
+            set -x
+            aws cloudformation deploy --template cloudformation/sampleStack.yml --stack-name SampleStack
       - run:
           name: "Wait Stack Complete"
           command: "aws cloudformation wait stack-create-complete --stack-name SampleStack"
