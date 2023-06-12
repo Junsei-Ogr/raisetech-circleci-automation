@@ -1,6 +1,6 @@
 AWSTemplateFormatVersion: "2010-09-09"
 
-Description: "世界一丁寧なAWS解説をCloudformationでコード化" # 講師作成テンプレートを使用
+Description: "世界一丁寧なAWS解説をCloudformationでコード化"　#講師作成サンプルテンプレート
 
 # AWSの各リソースの定義
 Resources:
@@ -168,21 +168,21 @@ Resources:
 
 
   # ElasticIp定義
-  RaisetechLive10EIP:
-    Type: AWS::EC2::EIPAssociation
-    Properties:
-      EIP: 54.249.79.236
-      InstanceId: !Ref RaisetechLive10Ec21a
-    DependsOn: RaisetechLive10Ec21a
+  # RaisetechLive10EIP:
+  #   Type: AWS::EC2::EIPAssociation
+  #   Properties:
+  #     EIP: 54.249.79.236
+  #     InstanceId: !Ref RaisetechLive10Ec21a
+  #   DependsOn: RaisetechLive10Ec21a
 
   # EC2インスタンスの定義
   RaisetechLive10Ec21a:
     Type: AWS::EC2::Instance
     Properties:
       SubnetId: !Ref RaiseTechLive10PublicSubnet1a
-      InstanceType: t3.small
+      InstanceType: t2.small
       AvailabilityZone: ap-northeast-1a
-      KeyName: id_rsa_aws_from_m1_mac
+      KeyName: id_rsa #テスト先のサーバー(EC2)と同じものに
       Monitoring: false
       # ここのAMIはマネジメントコンソールから確認可能
       # 中身はAmazon Linux2
@@ -193,5 +193,6 @@ Resources:
       Tags:
         - Key: Name
           Value: RaiseTechLive10Ec21a
+          
           
           
