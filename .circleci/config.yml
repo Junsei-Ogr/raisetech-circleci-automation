@@ -38,8 +38,10 @@ jobs:
           command: |
             set -x
             aws cloudformation deploy --stack-name SampleStack --template sample_stack.yml
-            
-            
+      - run:
+          name: "Wait Stack Complete"
+          command: "aws cloudformation wait stack-create-complete --stack-name SampleStack"
+ 
   ansible:
     executor: ansible-playbook/default
     steps:
