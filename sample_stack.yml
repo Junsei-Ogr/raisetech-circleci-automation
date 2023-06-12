@@ -1,5 +1,6 @@
 AWSTemplateFormatVersion: "2010-09-09"
-Description: "世界一丁寧なAWS解説をCloudformationでコード化" #講師作成サンプルテンプレート
+
+Description: "世界一丁寧なAWS解説をCloudformationでコード化" # 講師作成テンプレートを使用
 
 # AWSの各リソースの定義
 Resources:
@@ -57,5 +58,138 @@ Resources:
           Value: raisetech-live10-rds-private-subnet-1d
     Metadata:
       AWS::CloudFormation::Designer:
-        id: 431e856f-cdba-4222-b438-
+        id: 431e856f-cdba-4222-b438-198e1bd44938
 
+  # RDS用プライベートサブネット1cの定義
+  RaiseTechLive10RdsSubnet1c:
+    Type: AWS::EC2::Subnet
+    Properties:
+      CidrBlock: 10.0.2.0/24
+      AvailabilityZone: ap-northeast-1c
+      VpcId: !Ref RaiseTechLive10VPC
+      Tags:
+        - Key: Name
+          Value: raisetech-live10-rds-private-subnet-1c
+    Metadata:
+      AWS::CloudFormation::Designer:
+        id: 09b01ebb-8e43-416e-81a8-60fc6b4dac8a
+
+  # インターネットゲートウェイの定義
+  RaiseTechLive10Igw:
+    Type: AWS::EC2::InternetGateway
+    Properties:
+      Tags:
+        - Key: Name
+          Value: raisetech-live10-igw
+
+  # VPCGatewayAttachment定義
+  RaiseTechLive10VpcGatewayAttachment:
+    Type: AWS::EC2::VPCGatewayAttachment
+    Properties:
+      VpcId: !Ref RaiseTechLive10VPC
+      InternetGatewayId: !Ref RaiseTechLive10Igw
+
+  # ルートテーブルの定義
+  RaiseTechLive10RouteTable:
+    Type:  AWS::EC2::RouteTable
+    Properties:
+      VpcId: !Ref RaiseTechLive10VPC
+      Tags:
+        - Key: Name
+          Value: raisetech-live10-route-table
+
+  # サブネットとルートテーブルの関連付け
+  RaiseTechLive10RouteLocal1a:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref RaiseTechLive10PublicSubnet1a
+      RouteTableId: !Ref RaiseTechLive10RouteTable
+
+  # サブネットとルートテーブルの関連付け
+  RaiseTechLive10RouteLocal1d:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref RaiseTechLive10PublicSubnet1d
+      RouteTableId: !Ref RaiseTechLive10RouteTable
+
+  # インターネットゲートウェイとルートテーブルの関連付け
+  RaiseTechLive10RouteTableWithIgw:
+    Type: AWS::EC2::Route
+    Properties:
+      RouteTableId: !Ref RaiseTechLive10RouteTable
+      DestinationCidrBlock: 0.0.0.0/0
+      GatewayId: !Ref RaiseTechLive10Igw
+
+
+  # セキュリティグループの定義
+  RaiseTechLive10SecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      VpcId: !Ref RaiseTechLive10VPC
+      GroupDescription: This Security Group is for RaiseTechLive10
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: 22
+          ToPort: 22
+          CidrIp: 0.0.0.0/0
+        # Railsのアプリケーションサーバー用
+        - IpProtocol: tcp
+          FromPort: 3000
+          ToPort: 3000
+          CidrIp: 0.0.0.0/0
+      SecurityGroupEgress:
+        - IpProtocol: -1
+          CidrIp: 0.0.0.0/0
+      Tags:
+        - Key: Name
+          Value: raisetech-live10-sg
+
+  # RDS用セキュリティグループの定義
+  RaiseTechLive10RdsSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      VpcId: !Ref RaiseTechLive10VPC
+      GroupDescription: This Security Group is for RDS of RaiseTechLive10
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 3306
+          ToPort: 3306
+          SourceSecurityGroupId: !Ref RaiseTechLive10SecurityGroup
+      SecurityGroupEgress:
+        - IpProtocol: -1
+          CidrIp: 0.0.0.0/0
+      Tags:
+        - Key: Name
+          Value: raisetech-live10-sg-for-rds
+
+
+  # ElasticIp定義
+  RaisetechLive10EIP:
+    Type: AWS::EC2::EIPAssociation
+    Properties:
+      EIP: 54.249.79.236
+      InstanceId: !Ref RaisetechLive10Ec21a
+    DependsOn: RaisetechLive10Ec21a
+
+  # EC2インスタンスの定義
+  RaisetechLive10Ec21a:
+    Type: AWS::EC2::Instance
+    Properties:
+      SubnetId: !Ref RaiseTechLive10PublicSubnet1a
+      InstanceType: t3.small
+      AvailabilityZone: ap-northeast-1a
+      KeyName: id_rsa_aws_from_m1_mac
+      Monitoring: false
+      # ここのAMIはマネジメントコンソールから確認可能
+      # 中身はAmazon Linux2
+      ImageId: ami-0a1c2ec61571737db
+      InstanceInitiatedShutdownBehavior: stop
+      SecurityGroupIds:
+        - !Ref RaiseTechLive10SecurityGroup
+      Tags:
+        - Key: Name
+          Value: RaiseTechLive10Ec21a
