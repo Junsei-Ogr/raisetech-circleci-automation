@@ -39,7 +39,7 @@ jobs:
             STACK_NAME="SampleStack"
             REGION="ap-northeast-1"
             set -x
-            aws cloudformation deploy --stack-name $STACK_NAME --region $REGION --template-body file://sample_stack.yml
+            aws cloudformation deploy --stack-name $STACK_NAME --region $REGION --template-file sample_stack.yml
       - run:
           name: "Wait Stack Complete"
           command: "aws cloudformation wait stack-create-complete --stack-name SampleStack"
