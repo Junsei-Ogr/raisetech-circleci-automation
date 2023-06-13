@@ -2,29 +2,44 @@
 # See: https://circleci.com/docs/2.0/configuration-reference
 version: 2.1
 
-
 orbs:
   aws-cli: circleci/aws-cli@2.0
   ansible-playbook: orbss/ansible-playbook@0.0.5
+  ruby: circleci/ruby@2.0.0 
 
 # Define a job to be invoked later in a workflow.
 # See: https://circleci.com/docs/2.0/configuration-reference/#jobs
 jobs:
-  aws-cli-example:
-    executor: aws-cli/default # 実行元の呼び出し
+  executeCloudFormation:
+    executor: aws-cli/default
     steps:
-      - checkout # まずはgithubのリポジトリにまずはcheckout
+      - checkout
       - aws-cli/setup:
           aws-access-key-id: AWS_ACCESS_KEY
           aws-secret-access-key: AWS_SECRET_KEY
           aws-region: AWS_DEFAULT_REGION
+      # - run:
+      #     name: "Check Stack Existence"
+      #     command: |
+      #       STACK_NAME="SampleStack"
+      #       REGION="ap-northeast-1"
+            
+      #       # Check if the stack exists
+      #       if aws cloudformation describe-stacks --stack-name $STACK_NAME --region $REGION >/dev/null 2>&1; then
+      #         echo "Stack $STACK_NAME already exists. Skipping stack creation."
+      #         exit 0
+      #       else
+      #         echo "Stack $STACK_NAME does not exist. Proceeding with stack creation."
+      #         # Execute the stack creation command here
+      #         aws cloudformation create-stack --stack-name $STACK_NAME --region $REGION --template-body file://sample_stack.yml
+      #       fi
       - run:
-          name: "Upload Cloudformation files"
-          command: "aws cloudformation create-stack --stack-name SampleStack --region ap-northeast-1 --template-body file://sample_stack.yml"
-      - run:
-          name: "Wait Stack Complete"
-          command: "aws cloudformation wait stack-create-complete --stack-name SampleStack"
- 
+          name: deploy Cloudformation
+          command: |
+            set -x
+            aws cloudformation deploy --stack-name SampleStack --template sample_stack.yml
+     
+     
   ansible:
     executor: ansible-playbook/default
     steps:
@@ -38,19 +53,41 @@ jobs:
           inventory: ANSIBLE_INVENTORY
           playbook: playbook.yml
           playbook-options: "-u ec2-user --private-key ~/.ssh/id_rsa"
-          # private-key: ANSIBLE_PRIVATE_KEY
-      # - run:
-      #     name: "Connect ssh and echo Hello"
-      #     command: ssh ${USER_NAME}@${HOST_NAME} 'echo Hello'
+      
+  install-ruby:  
+    docker:
+      - image: cimg/ruby:2.7-node
+    steps:
+      - checkout
+      - ruby/install:
+          version: '2.7'
 
+  install-Serverspec:
+    docker:
+      - image: cimg/ruby:2.7-node
+    steps:
+      - checkout
+      - run:
+          name: "Install Serverspec"
+          command: gem install serverspec
+      - run:
+          name: "Run Serverspec"
+          command: rake spec
 
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
 workflows:
-  # aws-cli:
-  #   jobs:
-  #     - aws-cli-example
-  ansible:
+  raisetech-circleci:
     jobs:
-      - ansible
+      - executeCloudFormation
+      - ansible:
+          requires:
+            - executeCloudFormation
+      - install-ruby:
+          requires:
+            - ansible
+      - install-Serverspec:
+          requires:
+            - install-ruby
+          
 
